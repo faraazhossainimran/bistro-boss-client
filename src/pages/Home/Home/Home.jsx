@@ -1,9 +1,10 @@
+import Banner from "../../../shared/NavBar/Banner/Banner"
 
 
 const Home = () => {
     return (
         <div>
-            this is home
+            <Banner></Banner>
         </div>
     )
 }
