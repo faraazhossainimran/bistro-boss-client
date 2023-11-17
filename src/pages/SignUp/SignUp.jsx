@@ -1,6 +1,10 @@
+import { useContext } from "react";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../providers/AuthProvider";
 const SignUp = () => {
+  const {createUser} = useContext(AuthContext)
   const {
     register,
     handleSubmit,
@@ -8,24 +12,36 @@ const SignUp = () => {
   } = useForm();
   const onSubmit = (data) => {
     console.log(data);
+    createUser(data.email, data.password)
+    .then(result => {
+      Swal.fire({
+        title: "Account created succussfully",
+        showClass: {
+          popup: `
+            animate__animated
+            animate__fadeInUp
+            animate__faster
+          `
+        },
+        hideClass: {
+          popup: `
+            animate__animated
+            animate__fadeOutDown
+            animate__faster
+          `
+        }
+      });
+    })
+    .catch(error => {
+      console.log(error);
+    })
   };
 
-  //   const handleSignUp = (e) => {
-  //     e.preventDefault();
-  //     const form = e.target;
-  //     const email = form.email.value;
-  //     const password = form.password.value;
-  //     console.log(email, password);
-  //     signIn(email, password)
-  //       .then((result) => {
-  //         console.log(result.user);
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   };
   return (
-    <div>
+    <>
+      <Helmet>
+        <title>Bistro Boss | Sign UP</title>
+      </Helmet>
       <div className="hero min-h-screen bg-base-200">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:text-left">
@@ -101,7 +117,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -14,7 +14,7 @@ const AuthProvider = ({children}) => {
         return signOut(auth)
     }
     const createUser = (email, password) => {
-        loading(true)
+        setLoading(true)
         return createUserWithEmailAndPassword(auth, email, password)
     }
     useEffect(()=> {
