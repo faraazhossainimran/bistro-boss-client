@@ -71,13 +71,17 @@ const SignUp = () => {
                   <span className="label-text">Password</span>
                 </label>
                 <input
-                  {...register("password")}
+                  {...register("password", {required: true, minLength: 8, maxLength: 12, pattern: /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])/})}
                   name="password"
                   type="password"
                   placeholder="password"
                   className="input input-bordered"
                   required
                 />
+                {errors.password?.type === "required" && <span className="text-red-600">Email is required</span>}
+                {errors.password?.type === "minLength" && <span className="text-red-600">Password must be 8 characters</span>}
+                {errors.password?.type === "maxLength" && <span className="text-red-600">Password must be less than 13 characters</span>}
+                {errors.password?.type === "pattern" && <span className="text-red-600">Password must be one capital letter, one small letter and a number</span>}
                 <label className="label">{/* <LoadCanvasTemplate /> */}</label>
               </div>
               <div className="form-control mt-6">
