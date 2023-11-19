@@ -4,6 +4,7 @@ import useAuth from "../../pages/hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useAxiosSecure from "../../pages/hooks/useAxiosSecure";
+import useCart from "../../pages/hooks/useCart";
 
 
 
@@ -13,11 +14,11 @@ const FoodCard = ({item}) => {
     const navigate = useNavigate()
     const {user} = useAuth()
     const axiosSecure = useAxiosSecure()
-    const addToCart = (food) => {
+    const [, refetch]= useCart();
+    const addToCart = () => {
 
       if(user && user?.email){
-        // TODO send cart item to the database
-        console.log(food, user?.email);
+        // send cart item to the database
         const cartItem = {
           menuId: _id, 
           email: user.email, 
@@ -36,6 +37,8 @@ const FoodCard = ({item}) => {
               showConfirmButton: false,
               timer: 1500
             });
+            // refetch cart to update the cart items count
+            refetch()
           }
         })
       } 
@@ -69,7 +72,7 @@ const FoodCard = ({item}) => {
           <h2 className="card-title">{name}</h2>
           <p>{recipe}</p>
           <div className="card-actions ">
-            <button onClick={()=> addToCart(item)} className="btn btn-outline border-0 border-b-4 mt-4 bg-slate-100 border-orange-300">Add To Cart</button>
+            <button onClick={addToCart} className="btn btn-outline border-0 border-b-4 mt-4 bg-slate-100 border-orange-300">Add To Cart</button>
           </div>
         </div>
       </div>
