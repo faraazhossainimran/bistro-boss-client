@@ -14,7 +14,8 @@ const Login = () => {
   const {signIn} = useContext(AuthContext)
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state?.from?.pathname || '/';
+  const from = location?.state?.from?.pathname || '/';
+  console.log('state in the location login page', location.state.from);
   const [disabled, setDisabled] = useState(true);
   const handleLogin = (e) => {
     e.preventDefault();

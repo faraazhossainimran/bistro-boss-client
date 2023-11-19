@@ -1,40 +1,43 @@
 import { useContext } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
+import Swal from "sweetalert2";
 const SignUp = () => {
-  const {createUser} = useContext(AuthContext)
+  const navigate = useNavigate()
+  const { createUser, updateUserProfile } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
+    console.log("from on submit", data);
     createUser(data.email, data.password)
-    .then(result => {
-      Swal.fire({
-        title: "Account created succussfully",
-        showClass: {
-          popup: `
-            animate__animated
-            animate__fadeInUp
-            animate__faster
-          `
-        },
-        hideClass: {
-          popup: `
-            animate__animated
-            animate__fadeOutDown
-            animate__faster
-          `
-        }
-      });
-    })
-    .catch(error => {
-      console.log(error);
-    })
+      .then((result) => {
+        console.log(result.user);
+        updateUserProfile(data.name, data.photoURL)
+          .then((result) => {
+            console.log('userprofile created');
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "You account has been created",
+              showConfirmButton: false,
+              timer: 1500
+            });
+           navigate('/')
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: "Error!",
+              text: "Something went wrong",
+              icon: "erorr"
+            });
+          });
+      })
   };
 
   return (
@@ -64,47 +67,84 @@ const SignUp = () => {
                   name="name"
                   placeholder="name"
                   className="input input-bordered"
-                  
                 />
-                {errors.name && <span className="text-red-600">Name is required</span>}
+                {errors.name && (
+                  <span className="text-red-600">Name is required</span>
+                )}
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Photo Url</span>
+                </label>
+                <input
+                  {...register("photoURL", { required: true })}
+                  type="text"
+                  name="photoURL"
+                  placeholder="Photo URL"
+                  className="input input-bordered"
+                />
+                {errors.photoURL && (
+                  <span className="text-red-600">photoURL is required</span>
+                )}
               </div>
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Email</span>
                 </label>
                 <input
-                  {...register("email" , { required: true })}
+                  {...register("email", { required: true })}
                   type="email"
                   name="email"
                   placeholder="email"
                   className="input input-bordered"
-                  
                 />
-                {errors.email && <span className="text-red-600">Email is required</span>}
+                {errors.email && (
+                  <span className="text-red-600">Email is required</span>
+                )}
               </div>
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Password</span>
                 </label>
                 <input
-                  {...register("password", {required: true, minLength: 8, maxLength: 12, pattern: /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])/})}
+                  {...register("password", {
+                    required: true,
+                    minLength: 8,
+                    maxLength: 12,
+                    pattern: /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])/,
+                  })}
                   name="password"
                   type="password"
                   placeholder="password"
                   className="input input-bordered"
                   required
                 />
-                {errors.password?.type === "required" && <span className="text-red-600">Email is required</span>}
-                {errors.password?.type === "minLength" && <span className="text-red-600">Password must be 8 characters</span>}
-                {errors.password?.type === "maxLength" && <span className="text-red-600">Password must be less than 13 characters</span>}
-                {errors.password?.type === "pattern" && <span className="text-red-600">Password must be one capital letter, one small letter and a number</span>}
+                {errors.password?.type === "required" && (
+                  <span className="text-red-600">Email is required</span>
+                )}
+                {errors.password?.type === "minLength" && (
+                  <span className="text-red-600">
+                    Password must be 8 characters
+                  </span>
+                )}
+                {errors.password?.type === "maxLength" && (
+                  <span className="text-red-600">
+                    Password must be less than 13 characters
+                  </span>
+                )}
+                {errors.password?.type === "pattern" && (
+                  <span className="text-red-600">
+                    Password must be one capital letter, one small letter and a
+                    number
+                  </span>
+                )}
                 <label className="label">{/* <LoadCanvasTemplate /> */}</label>
               </div>
               <div className="form-control mt-6">
                 <input
                   type="submit"
                   className="btn btn-primary"
-                  value="login"
+                  value="signup"
                 ></input>
                 {/* <button >Login</button> */}
               </div>
