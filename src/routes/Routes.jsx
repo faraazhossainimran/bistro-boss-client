@@ -9,6 +9,7 @@ import Sectret from "../shared/Sectret/Sectret";
 import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../Layout/Dashboard";
 import Cart from "../pages/Dashboard/Cart/Cart";
+import AllUsers from "../pages/Dashboard/AllUsers/AllUsers";
 
 export const router = createBrowserRouter([
   {
@@ -47,12 +48,17 @@ export const router = createBrowserRouter([
   },
   {
     path: "dashboard",
-    element: <Dashboard></Dashboard>,
+    element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
     children: [
       {
           path: "cart",
           element: <Cart></Cart>
-      }
+      },
+      // admin routes
+      {
+        path: "users",
+        element: <AllUsers></AllUsers>
+    }
     ],
   },
 ]);

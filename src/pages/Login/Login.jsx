@@ -9,12 +9,13 @@ import { AuthContext } from "../../providers/AuthProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Swal from "sweetalert2";
+import SocialLogin from "../../components/SocialLogin/SocialLogin";
 
 const Login = () => {
-  const {signIn} = useContext(AuthContext)
-  const navigate = useNavigate()
-  const location = useLocation()
-  const from = location?.state?.from?.pathname || '/';
+  const { signIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || "/";
   const [disabled, setDisabled] = useState(true);
   const handleLogin = (e) => {
     e.preventDefault();
@@ -23,29 +24,29 @@ const Login = () => {
     const password = form.password.value;
     console.log(email, password);
     signIn(email, password)
-    .then(result => {
-      Swal.fire({
-        title: "Logged in",
-        showClass: {
-          popup: `
+      .then((result) => {
+        Swal.fire({
+          title: "Logged in",
+          showClass: {
+            popup: `
             animate__animated
             animate__fadeInUp
             animate__faster
-          `
-        },
-        hideClass: {
-          popup: `
+          `,
+          },
+          hideClass: {
+            popup: `
             animate__animated
             animate__fadeOutDown
             animate__faster
-          `
-        }
+          `,
+          },
+        });
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        console.log(error);
       });
-      navigate(from, {replace: true})
-    })
-    .catch(error => {
-      console.log(error);
-    })
   };
   useEffect(() => {
     loadCaptchaEnginge(6);
@@ -53,18 +54,16 @@ const Login = () => {
   const handleValidatedCaptcha = (e) => {
     const user_captcha_value = e.target.value;
     console.log(user_captcha_value);
-    if(validateCaptcha(user_captcha_value) == true){
+    if (validateCaptcha(user_captcha_value) == true) {
       // alert('capcha Matched')
-      setDisabled(false)
+      setDisabled(false);
+    } else {
+      setDisabled(true);
     }
-    else {
-      setDisabled(true)
-    }
-
   };
   return (
     <>
-          <Helmet>
+      <Helmet>
         <title>Bistro Boss | Log in</title>
       </Helmet>
       <div className="hero min-h-screen bg-base-200">
@@ -108,7 +107,7 @@ const Login = () => {
               </div>
               <div className="form-control">
                 <input
-                onBlur={handleValidatedCaptcha}
+                  onBlur={handleValidatedCaptcha}
                   type="text"
                   name="captcha"
                   placeholder="captcha"
@@ -118,7 +117,7 @@ const Login = () => {
               </div>
               <div className="form-control mt-6">
                 <input
-                disabled={disabled}
+                  disabled={disabled}
                   type="submit"
                   className="btn btn-primary"
                   value="login"
@@ -126,7 +125,15 @@ const Login = () => {
                 {/* <button >Login</button> */}
               </div>
             </form>
-            <p><small>New here?<Link to={'/signup'}>Create an account</Link></small></p>
+            <p className="px-6 pb-4 text-lg">
+              <small>
+                New here?<Link to={"/signup"}> Create an account</Link>
+              </small>
+            </p>
+
+           <button >
+           <SocialLogin></SocialLogin>
+           </button>
           </div>
         </div>
       </div>
